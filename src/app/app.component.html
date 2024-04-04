@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="form-container" *ngIf="!zalogowany && !pokazFormularzRejestracji">
+    <h1>Logowanie</h1>
+    <form (submit)="zaloguj()">
+      <div>
+        <label for="nazwaUzytkownika">Nazwa użytkownika:</label>
+        <input type="text" id="nazwaUzytkownika" name="nazwaUzytkownika" [(ngModel)]="formularzLogowania.nazwaUzytkownika" required>
+      </div>
+      <div>
+        <label for="haslo">Hasło:</label>
+        <input type="password" id="haslo" name="haslo" [(ngModel)]="formularzLogowania.haslo" required>
+      </div>
+      <button type="submit">Zaloguj</button>
+    </form>
+    
+    <button class="toggle-button" (click)="toggleFormularzRejestracji()">Zarejestruj się</button>
+  </div>
+
+  <div class="form-container" *ngIf="!zalogowany && pokazFormularzRejestracji">
+    <h1>Rejestracja</h1>
+    <form (submit)="zarejestruj()">
+      <div>
+        <label for="nowaNazwaUzytkownika">Nowa nazwa użytkownika:</label>
+        <input type="text" id="nowaNazwaUzytkownika" name="nowaNazwaUzytkownika" [(ngModel)]="formularzRejestracji.nazwaUzytkownika" required>
+      </div>
+      <div>
+        <label for="noweHaslo">Nowe hasło:</label>
+        <input type="password" id="noweHaslo" name="noweHaslo" [(ngModel)]="formularzRejestracji.haslo" required>
+      </div>
+      <div *ngIf="formularzRejestracji.haslo && !isPasswordValid(formularzRejestracji.haslo)">
+        <div class="error-message">Hasło musi zawierać co najmniej jedną wielką literę i jedną cyfrę.</div>
+      </div>
+      <button type="submit">Zarejestruj</button>
+      <br> <br>
+      <button class="toggle-button" (click)="toggleFormularzRejestracji()">Powrót do logowania</button>
+    </form>
+  </div>
+
+  <div class="welcome-container" *ngIf="zalogowany">
+    <h1>Witaj, {{ nazwaUzytkownika }}!</h1>
+    <div class="kursy-container">
+      <h2>Wprowadź dane kursanta</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Nazwa kursu</th>
+            <th>Imię i nazwisko uczestnika</th>
+            <th>Akcje</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let kurs of kursy; let i = index">
+            <td>{{ kurs.nazwa }}</td>
+            <td><input type="text" [(ngModel)]="kurs.imieINazwisko"></td>
+            <td><button class="zapisz-button" (click)="zapiszNaKurs(kurs)">Zapisz na kurs</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="zapisanyUczestnik" class="zapisany-uczestnik">
+      <h2>Zapisany uczestnik:</h2>
+      <p>Imię i nazwisko: {{ zapisanyUczestnik.imieINazwisko }}</p>
+      <p>Zapisano na kurs: {{ aktualnieWybranyKurs }}</p>
+    </div>
+    <br>
+    <button class="wyloguj-button" (click)="wyloguj()">Wyloguj</button>
